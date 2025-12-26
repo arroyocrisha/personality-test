@@ -6,20 +6,22 @@
     <title>Core Driver Personality Test</title>
     <style>
         :root {
-            --glass-bg: rgba(255, 255, 255, 0.9);
-            --primary-accent: #4a90e2;
-            --text-dark: #333;
+            --glass-bg: rgba(255, 255, 255, 0.95);
+            --primary-accent: #2c3e50;
+            --secondary-accent: #3498db;
+            --text-dark: #2d3436;
+            --text-light: #636e72;
         }
 
         body, html {
             height: 100%;
             margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             color: var(--text-dark);
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow: hidden;
+            overflow-x: hidden;
         }
 
         /* Background Image */
@@ -29,79 +31,112 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: url('https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&q=80&w=2070');
+            background-image: url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=2070');
             background-size: cover;
             background-position: center;
-            filter: brightness(0.7);
+            filter: brightness(0.6);
             z-index: -1;
         }
 
         .quiz-container {
             background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            padding: 2rem;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            max-width: 600px;
+            backdrop-filter: blur(15px);
+            padding: 3rem;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            max-width: 700px;
             width: 90%;
             text-align: center;
-            max-height: 90vh;
+            max-height: 85vh;
             overflow-y: auto;
+            position: relative;
         }
 
         .progress-bar {
             width: 100%;
-            height: 10px;
-            background: #ddd;
-            border-radius: 5px;
-            margin-bottom: 20px;
+            height: 8px;
+            background: #dfe6e9;
+            border-radius: 10px;
+            margin-bottom: 25px;
         }
 
         .progress-fill {
             height: 100%;
-            background: var(--primary-accent);
+            background: var(--secondary-accent);
             width: 0%;
-            border-radius: 5px;
-            transition: width 0.3s ease;
+            border-radius: 10px;
+            transition: width 0.4s ease;
         }
 
-        h2 { margin-bottom: 1.5rem; font-size: 1.4rem; }
+        h1 { font-weight: 800; color: var(--primary-accent); margin-bottom: 1rem; }
+        h2 { margin-bottom: 1.5rem; font-size: 1.3rem; line-height: 1.4; }
 
         .options-container {
             display: grid;
-            gap: 10px;
+            gap: 12px;
+            margin-top: 20px;
         }
 
         .option-btn {
-            background: white;
-            border: 2px solid #ddd;
-            padding: 15px;
-            border-radius: 10px;
+            background: #fff;
+            border: 1px solid #dcdde1;
+            padding: 16px 20px;
+            border-radius: 12px;
             cursor: pointer;
             transition: all 0.2s ease;
             font-size: 1rem;
             text-align: left;
+            color: var(--text-dark);
+            font-weight: 500;
         }
 
         .option-btn:hover {
-            border-color: var(--primary-accent);
-            background: #f0f7ff;
+            border-color: var(--secondary-accent);
+            background: #f1f9ff;
+            transform: translateY(-2px);
         }
 
         .hidden { display: none; }
 
-        #result-page h1 { color: var(--primary-accent); }
-        .result-desc { line-height: 1.6; margin: 20px 0; }
+        /* Results Styling */
+        #result-page { text-align: left; }
+        #result-page h1 { text-align: center; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        
+        .result-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(52, 152, 219, 0.05);
+            border-left: 4px solid var(--secondary-accent);
+            border-radius: 0 8px 8px 0;
+        }
 
+        .result-section strong { display: block; margin-bottom: 5px; color: var(--primary-accent); }
+
+        .credits {
+            margin-top: 40px;
+            font-size: 0.85rem;
+            color: var(--text-light);
+            text-align: center;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+
+        .btn-container { text-align: center; margin-top: 30px; }
+        
         .restart-btn {
             background: var(--primary-accent);
             color: white;
             border: none;
-            padding: 12px 25px;
-            border-radius: 5px;
+            padding: 14px 30px;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 1rem;
+            font-weight: 600;
+            transition: opacity 0.2s;
         }
+
+        .restart-btn:hover { opacity: 0.9; }
+
     </style>
 </head>
 <body>
@@ -111,68 +146,70 @@
 <div class="quiz-container">
     <div id="start-page">
         <h1>Core Driver Test</h1>
-        <p>Discover your primary personality driver through 20 situational questions.</p>
-        <button class="restart-btn" onclick="startQuiz()">Start Test</button>
+        <p>A 20-question deep dive into your personality traits and natural instincts.</p>
+        <div class="btn-container">
+            <button class="restart-btn" onclick="startQuiz()">Begin Journey</button>
+        </div>
     </div>
 
     <div id="quiz-page" class="hidden">
         <div class="progress-bar"><div id="progress" class="progress-fill"></div></div>
-        <p id="question-number" style="font-weight: bold; color: #666;"></p>
-        <h2 id="question-text">Question text goes here?</h2>
-        <div class="options-container" id="options">
-            </div>
+        <p id="question-number" style="font-size: 0.9rem; color: var(--text-light); text-transform: uppercase; letter-spacing: 1px;"></p>
+        <h2 id="question-text"></h2>
+        <div class="options-container" id="options"></div>
     </div>
 
     <div id="result-page" class="hidden">
-        <h2>Your Core Driver is:</h2>
-        <h1 id="result-title">The Architect</h1>
-        <div class="result-desc" id="result-text"></div>
-        <button class="restart-btn" onclick="location.reload()">Take it Again</button>
+        <p style="text-align: center; color: var(--text-light); margin: 0;">Your result is...</p>
+        <h1 id="result-title"></h1>
+        
+        <div id="result-content">
+            <div class="result-section">
+                <strong>The Inner World:</strong>
+                <span id="inner-world"></span>
+            </div>
+            <div class="result-section">
+                <strong>In the Workplace:</strong>
+                <span id="work-style"></span>
+            </div>
+            <div class="result-section">
+                <strong>Growth Opportunity:</strong>
+                <span id="growth-tip"></span>
+            </div>
+        </div>
+
+        <div class="btn-container">
+            <button class="restart-btn" onclick="location.reload()">Retake Test</button>
+        </div>
+
+        <div class="credits">
+            Designed and Developed by <strong>ccarroyo</strong>
+        </div>
     </div>
 </div>
 
 <script>
     const questions = [
-        { q: "A friend is an hour late to dinner without texting. Your first thought is:", a: "A", b: "B", c: "C", d: "D", 
-          options: ["This is disrespectful to my schedule.", "I wonder if they found something cooler to do?", "I hope they’re okay and safe!", "I’ll use this extra time to read or finish work."] },
-        { q: "You’re at a museum. Which exhibit do you spend the most time in?", a: "A", b: "B", c: "C", d: "D",
-          options: ["The historical timeline.", "The abstract modern art.", "The interactive community exhibit.", "The technical engineering exhibit."] },
-        { q: "When you have a massive 'To-Do' list, you feel:", a: "A", b: "B", c: "C", d: "D",
-          options: ["Energized—I love checking things off.", "Stifled—I’ll do what I feel like first.", "Worried—I don't want to let anyone down.", "Analytical—I need to prioritize by impact."] },
-        { q: "In a group project, you are usually the person who:", a: "A", b: "B", c: "C", d: "D",
-          options: ["Sets the deadlines and keeps order.", "Comes up with the 'outside the box' idea.", "Mediates arguments and checks in on feelings.", "Fact-checks data and ensures sound logic."] },
-        { q: "How do you feel about 'Small Talk' at parties?", a: "A", b: "B", c: "C", d: "D",
-          options: ["It’s a necessary tool for networking.", "It’s boring; I want big ideas.", "It’s nice! It makes people feel welcome.", "It’s exhausting; I prefer deep 1-on-1s."] },
-        { q: "You win a free trip. You choose:", a: "A", b: "B", c: "C", d: "D",
-          options: ["A planned tour of historical sites.", "A backpack and a ticket to somewhere unknown.", "A cozy beach house for friends and family.", "A quiet retreat of natural or architectural beauty."] },
-        { q: "When you are stressed, your 'go-to' relief is:", a: "A", b: "B", c: "C", d: "D",
-          options: ["Cleaning my house or organizing my desk.", "Starting a new hobby or creative project.", "Calling a loved one to vent.", "Going for a solo walk to process thoughts."] },
-        { q: "Someone offers you a high-paying but repetitive job. You:", a: "A", b: "B", c: "C", d: "D",
-          options: ["Accept it—stability is key.", "Decline it—I need variety.", "Consider it—if the culture is kind.", "Analyze it—does the pay outweigh the boredom?"] },
-        { q: "Your favorite types of movies/books are usually:", a: "A", b: "B", c: "C", d: "D",
-          options: ["Biographies of successful people.", "Fantasy, Sci-Fi, or 'What if?' stories.", "Heartwarming dramas about relationships.", "Documentaries or complex thrillers."] },
-        { q: "How do you handle a mistake you made at work?", a: "A", b: "B", c: "C", d: "D",
-          options: ["Fix it and build a system to prevent it.", "Shrug it off and pivot quickly.", "Apologize and check on others' inconvenience.", "Analyze exactly where the logic failed."] },
-        { q: "What is your relationship with 'The Rules'?", a: "A", b: "B", c: "C", d: "D",
-          options: ["They are there for a reason.", "They are more like suggestions.", "I follow them to avoid causing trouble.", "I follow them if they make logical sense."] },
-        { q: "When buying new tech, you:", a: "A", b: "B", c: "C", d: "D",
-          options: ["Read the entire manual first.", "Tear the box open and just play with it.", "Ask a friend for their recommendation.", "Research the specs and compare models for weeks."] },
-        { q: "In a heated debate, you are most likely to say:", a: "A", b: "B", c: "C", d: "D",
-          options: ["'Let's stick to the facts and the agenda.'", "'Look at it from this different angle!'", "'I understand why you feel that way...'", "'That argument doesn't follow a logical path.'"] },
-        { q: "What does 'Success' look like to you?", a: "A", b: "B", c: "C", d: "D",
-          options: ["Achieving goals and having a reputation.", "Having freedom to do what I want.", "Being surrounded by people who love me.", "Mastering a subject and gaining wisdom."] },
-        { q: "You find a 10,000 PHP bill on the ground. You:", a: "A", b: "B", c: "C", d: "D",
-          options: ["Put it in savings or for a planned expense.", "Spend it on something spontaneous.", "Use it to take a friend out to lunch.", "Think about the statistical likelihood of finding it."] },
-        { q: "Your desk or workspace usually looks like:", a: "A", b: "B", c: "C", d: "D",
-          options: ["Immaculate—everything is labeled.", "A 'creative mess' with many projects.", "Personalized with photos and cards.", "Minimalist—only the essentials."] },
-        { q: "How do you react to a surprise party thrown for you?", a: "A", b: "B", c: "C", d: "D",
-          options: ["I appreciate it but wish I could have prepared.", "I love it! I love surprises.", "I feel incredibly loved and touched.", "I feel overwhelmed and want to slip away."] },
-        { q: "When learning something new, you prefer:", a: "A", b: "B", c: "C", d: "D",
-          options: ["A structured course with a syllabus.", "Immersing yourself and 'doing'.", "A group setting for discussion.", "Reading books or deep-dive videos alone."] },
-        { q: "What is your biggest 'Pet Peeve'?", a: "A", b: "B", c: "C", d: "D",
-          options: ["Tardiness and lack of preparation.", "Repetitive routines.", "Rudeness and lack of empathy.", "Illogical arguments."] },
-        { q: "If you could have one superpower, it would be:", a: "A", b: "B", c: "C", d: "D",
-          options: ["Time Management (pausing time).", "Shapeshifting (experiencing other lives).", "Telepathy (understanding feelings).", "Omniscience (knowing the answers)."] }
+        { q: "A friend is an hour late to dinner without texting. Your first thought is:", options: ["This is disrespectful to my time and schedule.", "I wonder if they found something more interesting to do?", "I hope they’re okay and safe!", "I’ll use this extra time to read or finish work."], keys: ["A", "B", "C", "D"] },
+        { q: "You’re at a museum. Which exhibit do you spend the most time in?", options: ["Historical timelines and civilizations.", "Experimental abstract modern art.", "Interactive community exhibits.", "Technical explanations of how things work."], keys: ["A", "B", "C", "D"] },
+        { q: "When you have a massive 'To-Do' list, you feel:", options: ["Energized—I love the feeling of checking things off.", "Restricted—I’ll do the things I feel like doing first.", "Concerned—I don't want to let anyone down.", "Objective—I need to prioritize these by impact."], keys: ["A", "B", "C", "D"] },
+        { q: "In a group project, you are usually the person who:", options: ["Sets the deadlines and keeps order.", "Comes up with the 'outside the box' concept.", "Mediates arguments and checks on the team.", "Fact-checks data and ensures sound logic."], keys: ["A", "B", "C", "D"] },
+        { q: "How do you feel about 'Small Talk' at parties?", options: ["It’s a necessary tool for social networking.", "It’s boring; I want to talk about big ideas.", "It’s nice! It makes people feel welcome.", "It’s exhausting; I prefer deep 1-on-1s."], keys: ["A", "B", "C", "D"] },
+        { q: "You win a free trip. You choose:", options: ["A meticulously planned cultural tour.", "A backpack and a ticket to somewhere unknown.", "A cozy stay where friends and family can join.", "A quiet retreat in a place of great beauty."], keys: ["A", "B", "C", "D"] },
+        { q: "When you are stressed, your 'go-to' relief is:", options: ["Cleaning my house or organizing my desk.", "Starting a new hobby or creative project.", "Calling a loved one to vent and connect.", "Going for a solo walk to process thoughts."], keys: ["A", "B", "C", "D"] },
+        { q: "Someone offers you a high-paying but repetitive job. You:", options: ["Accept it—stability is highly valuable.", "Decline it—I would lose my mind without variety.", "Consider it—if the culture is kind and supportive.", "Analyze it—does the pay justify the boredom?"], keys: ["A", "B", "C", "D"] },
+        { q: "Your favorite types of movies/books are usually:", options: ["Biographies of high-achieving people.", "Fantasy, Sci-Fi, or 'What if?' stories.", "Heartwarming stories about relationships.", "Documentaries or complex logic puzzles."], keys: ["A", "B", "C", "D"] },
+        { q: "How do you handle a mistake you made at work?", options: ["Fix it and build a system to prevent it.", "Shrug it off and pivot to the next thing.", "Apologize and ensure everyone is okay.", "Analyze exactly where the logic failed."], keys: ["A", "B", "C", "D"] },
+        { q: "What is your relationship with 'The Rules'?", options: ["They provide necessary structure and order.", "They are more like suggestions for others.", "I follow them to keep everyone comfortable.", "I follow them if they are logically sound."], keys: ["A", "B", "C", "D"] },
+        { q: "When buying new tech, you:", options: ["Read the entire manual and setup guide.", "Tear the box open and just start playing.", "Ask a friend for their recommendation.", "Research the technical specs for weeks."], keys: ["A", "B", "C", "D"] },
+        { q: "In a heated debate, you are most likely to say:", options: ["'Let's stick to the facts and the agenda.'", "'Look at it from this different angle!'", "'I understand why you feel that way...'", "'That argument doesn't follow a logical path.'"], keys: ["A", "B", "C", "D"] },
+        { q: "What does 'Success' look like to you?", options: ["Achieving goals and having a reputation.", "Having total freedom of your own time.", "Being surrounded by people who love you.", "Mastering a subject and gaining wisdom."], keys: ["A", "B", "C", "D"] },
+        { q: "You find a 1,000 PHP bill on the ground. You:", options: ["Put it in savings or for a planned expense.", "Spend it on something fun immediately.", "Use it to take a friend out to lunch.", "Think about why it was there in the first place."], keys: ["A", "B", "C", "D"] },
+        { q: "Your desk or workspace usually looks like:", options: ["Immaculate—everything is labeled.", "A 'creative mess' with many projects.", "Personalized with photos and cards.", "Minimalist—only the essentials."], keys: ["A", "B", "C", "D"] },
+        { q: "How do you react to a surprise party thrown for you?", options: ["I appreciate it but wish I had been prepared.", "I love it! I love surprises and energy.", "I feel incredibly loved and touched.", "I feel overwhelmed and want to slip away."], keys: ["A", "B", "C", "D"] },
+        { q: "When learning something new, you prefer:", options: ["A structured course with a syllabus.", "Immersing yourself and 'doing'.", "A group setting for discussion.", "Reading books or deep-dive videos alone."], keys: ["A", "B", "C", "D"] },
+        { q: "What is your biggest 'Pet Peeve'?", options: ["Tardiness and lack of preparation.", "Repetitive routines.", "Rudeness and lack of empathy.", "Illogical arguments."], keys: ["A", "B", "C", "D"] },
+        { q: "If you could have one superpower, it would be:", options: ["Time Manipulation (Efficiency).", "Shapeshifting (New Experiences).", "Telepathy (Emotional Connection).", "Omniscience (Perfect Logic)."], keys: ["A", "B", "C", "D"] }
     ];
 
     let currentQuestion = 0;
@@ -193,12 +230,11 @@
         const optionsDiv = document.getElementById('options');
         optionsDiv.innerHTML = '';
         
-        const labels = ['A', 'B', 'C', 'D'];
         qData.options.forEach((opt, index) => {
             const btn = document.createElement('button');
             btn.className = 'option-btn';
             btn.innerText = opt;
-            btn.onclick = () => selectOption(labels[index]);
+            btn.onclick = () => selectOption(qData.keys[index]);
             optionsDiv.appendChild(btn);
         });
     }
@@ -206,7 +242,6 @@
     function selectOption(label) {
         scores[label]++;
         currentQuestion++;
-        
         if (currentQuestion < questions.length) {
             showQuestion();
         } else {
@@ -219,30 +254,39 @@
         document.getElementById('result-page').classList.remove('hidden');
         
         const winner = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
-        const title = document.getElementById('result-title');
-        const desc = document.getElementById('result-text');
-
+        
         const profiles = {
             'A': {
                 name: "The Architect",
-                text: "You thrive on order, reliability, and results. You are high in Conscientiousness and likely the person everyone goes to when they need a plan executed perfectly. Your strength is your discipline."
+                inner: "You view life as a series of goals to be achieved. You find peace in order and clarity, and you likely have a mental (or literal) checklist for everything you do.",
+                work: "You are the 'Execution Expert.' You thrive under deadlines and are excellent at managing resources and time. People look to you for stability and leadership when things get chaotic.",
+                growth: "Practice 'Strategic Messiness.' Sometimes the best solutions come from the unknown. Don't be afraid to deviate from the plan if a better opportunity arises."
             },
             'B': {
                 name: "The Explorer",
-                text: "You value novelty, creativity, and freedom. You see life as an adventure and aren't afraid of the unknown. Your strength is your adaptability and outside-the-box thinking."
+                inner: "Your mind is a playground of 'What Ifs.' You are energized by novelty and bored by routine. You see constraints as challenges to be bypassed or reinvented.",
+                work: "You are the 'Innovation Engine.' You are best at the start of projects where creative vision is needed. You bring energy and a fresh perspective that keeps teams from stagnating.",
+                growth: "Focus on 'The Last 10%.' You are great at starting, but you'll reach new heights if you develop the discipline to finish projects completely before moving to the next shiny idea."
             },
             'C': {
                 name: "The Harmonizer",
-                text: "You are the emotional glue of any group. You value connection, kindness, and empathy above all else. Your strength is your ability to build community and make others feel seen."
+                inner: "You navigate the world through the lens of relationships. You are highly sensitive to the emotions of others and feel most fulfilled when the people around you are happy and supported.",
+                work: "You are the 'Cultural Glue.' You excel in collaborative environments, HR, or counseling roles. You ensure that the human element is never lost in the pursuit of profit or logic.",
+                growth: "Protect your 'No.' Because you value harmony, you might overcommit. Remember that saying no to others is often saying yes to your own well-being."
             },
             'D': {
                 name: "The Analyst",
-                text: "You value depth, independence, and objective truth. You prefer to understand the 'why' before the 'how' and enjoy quiet reflection. Your strength is your logical perspective and focus."
+                inner: "You value deep, objective truth. You prefer to stand back and observe patterns before jumping in. You find satisfaction in solving complex problems that others find overwhelming.",
+                work: "You are the 'Logical Compass.' In a world of hype, you bring grounded reality and data-driven insights. You are most effective when given the autonomy to dive deep into a subject.",
+                growth: "Translate your 'Why.' Others don't always see the logic as clearly as you do. Practice sharing your thought process earlier so others can follow your brilliant lead."
             }
         };
 
-        title.innerText = profiles[winner].name;
-        desc.innerText = profiles[winner].text;
+        const result = profiles[winner];
+        document.getElementById('result-title').innerText = result.name;
+        document.getElementById('inner-world').innerText = result.inner;
+        document.getElementById('work-style').innerText = result.work;
+        document.getElementById('growth-tip').innerText = result.growth;
     }
 </script>
 
