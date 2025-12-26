@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Core Driver Personality Test</title>
+    <style>
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.9);
+            --primary-accent: #4a90e2;
+            --text-dark: #333;
+        }
+
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-dark);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* Background Image */
+        .bg-image {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&q=80&w=2070');
+            background-size: cover;
+            background-position: center;
+            filter: brightness(0.7);
+            z-index: -1;
+        }
+
+        .quiz-container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            max-width: 600px;
+            width: 90%;
+            text-align: center;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: #ddd;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary-accent);
+            width: 0%;
+            border-radius: 5px;
+            transition: width 0.3s ease;
+        }
+
+        h2 { margin-bottom: 1.5rem; font-size: 1.4rem; }
+
+        .options-container {
+            display: grid;
+            gap: 10px;
+        }
+
+        .option-btn {
+            background: white;
+            border: 2px solid #ddd;
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 1rem;
+            text-align: left;
+        }
+
+        .option-btn:hover {
+            border-color: var(--primary-accent);
+            background: #f0f7ff;
+        }
+
+        .hidden { display: none; }
+
+        #result-page h1 { color: var(--primary-accent); }
+        .result-desc { line-height: 1.6; margin: 20px 0; }
+
+        .restart-btn {
+            background: var(--primary-accent);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="bg-image"></div>
+
+<div class="quiz-container">
+    <div id="start-page">
+        <h1>Core Driver Test</h1>
+        <p>Discover your primary personality driver through 20 situational questions.</p>
+        <button class="restart-btn" onclick="startQuiz()">Start Test</button>
+    </div>
+
+    <div id="quiz-page" class="hidden">
+        <div class="progress-bar"><div id="progress" class="progress-fill"></div></div>
+        <p id="question-number" style="font-weight: bold; color: #666;"></p>
+        <h2 id="question-text">Question text goes here?</h2>
+        <div class="options-container" id="options">
+            </div>
+    </div>
+
+    <div id="result-page" class="hidden">
+        <h2>Your Core Driver is:</h2>
+        <h1 id="result-title">The Architect</h1>
+        <div class="result-desc" id="result-text"></div>
+        <button class="restart-btn" onclick="location.reload()">Take it Again</button>
+    </div>
+</div>
+
+<script>
+    const questions = [
+        { q: "A friend is an hour late to dinner without texting. Your first thought is:", a: "A", b: "B", c: "C", d: "D", 
+          options: ["This is disrespectful to my schedule.", "I wonder if they found something cooler to do?", "I hope they’re okay and safe!", "I’ll use this extra time to read or finish work."] },
+        { q: "You’re at a museum. Which exhibit do you spend the most time in?", a: "A", b: "B", c: "C", d: "D",
+          options: ["The historical timeline.", "The abstract modern art.", "The interactive community exhibit.", "The technical engineering exhibit."] },
+        { q: "When you have a massive 'To-Do' list, you feel:", a: "A", b: "B", c: "C", d: "D",
+          options: ["Energized—I love checking things off.", "Stifled—I’ll do what I feel like first.", "Worried—I don't want to let anyone down.", "Analytical—I need to prioritize by impact."] },
+        { q: "In a group project, you are usually the person who:", a: "A", b: "B", c: "C", d: "D",
+          options: ["Sets the deadlines and keeps order.", "Comes up with the 'outside the box' idea.", "Mediates arguments and checks in on feelings.", "Fact-checks data and ensures sound logic."] },
+        { q: "How do you feel about 'Small Talk' at parties?", a: "A", b: "B", c: "C", d: "D",
+          options: ["It’s a necessary tool for networking.", "It’s boring; I want big ideas.", "It’s nice! It makes people feel welcome.", "It’s exhausting; I prefer deep 1-on-1s."] },
+        { q: "You win a free trip. You choose:", a: "A", b: "B", c: "C", d: "D",
+          options: ["A planned tour of historical sites.", "A backpack and a ticket to somewhere unknown.", "A cozy beach house for friends and family.", "A quiet retreat of natural or architectural beauty."] },
+        { q: "When you are stressed, your 'go-to' relief is:", a: "A", b: "B", c: "C", d: "D",
+          options: ["Cleaning my house or organizing my desk.", "Starting a new hobby or creative project.", "Calling a loved one to vent.", "Going for a solo walk to process thoughts."] },
+        { q: "Someone offers you a high-paying but repetitive job. You:", a: "A", b: "B", c: "C", d: "D",
+          options: ["Accept it—stability is key.", "Decline it—I need variety.", "Consider it—if the culture is kind.", "Analyze it—does the pay outweigh the boredom?"] },
+        { q: "Your favorite types of movies/books are usually:", a: "A", b: "B", c: "C", d: "D",
+          options: ["Biographies of successful people.", "Fantasy, Sci-Fi, or 'What if?' stories.", "Heartwarming dramas about relationships.", "Documentaries or complex thrillers."] },
+        { q: "How do you handle a mistake you made at work?", a: "A", b: "B", c: "C", d: "D",
+          options: ["Fix it and build a system to prevent it.", "Shrug it off and pivot quickly.", "Apologize and check on others' inconvenience.", "Analyze exactly where the logic failed."] },
+        { q: "What is your relationship with 'The Rules'?", a: "A", b: "B", c: "C", d: "D",
+          options: ["They are there for a reason.", "They are more like suggestions.", "I follow them to avoid causing trouble.", "I follow them if they make logical sense."] },
+        { q: "When buying new tech, you:", a: "A", b: "B", c: "C", d: "D",
+          options: ["Read the entire manual first.", "Tear the box open and just play with it.", "Ask a friend for their recommendation.", "Research the specs and compare models for weeks."] },
+        { q: "In a heated debate, you are most likely to say:", a: "A", b: "B", c: "C", d: "D",
+          options: ["'Let's stick to the facts and the agenda.'", "'Look at it from this different angle!'", "'I understand why you feel that way...'", "'That argument doesn't follow a logical path.'"] },
+        { q: "What does 'Success' look like to you?", a: "A", b: "B", c: "C", d: "D",
+          options: ["Achieving goals and having a reputation.", "Having freedom to do what I want.", "Being surrounded by people who love me.", "Mastering a subject and gaining wisdom."] },
+        { q: "You find a $100 bill on the ground. You:", a: "A", b: "B", c: "C", d: "D",
+          options: ["Put it in savings or for a planned expense.", "Spend it on something spontaneous.", "Use it to take a friend out to lunch.", "Think about the statistical likelihood of finding it."] },
+        { q: "Your desk or workspace usually looks like:", a: "A", b: "B", c: "C", d: "D",
+          options: ["Immaculate—everything is labeled.", "A 'creative mess' with many projects.", "Personalized with photos and cards.", "Minimalist—only the essentials."] },
+        { q: "How do you react to a surprise party thrown for you?", a: "A", b: "B", c: "C", d: "D",
+          options: ["I appreciate it but wish I could have prepared.", "I love it! I love surprises.", "I feel incredibly loved and touched.", "I feel overwhelmed and want to slip away."] },
+        { q: "When learning something new, you prefer:", a: "A", b: "B", c: "C", d: "D",
+          options: ["A structured course with a syllabus.", "Immersing yourself and 'doing'.", "A group setting for discussion.", "Reading books or deep-dive videos alone."] },
+        { q: "What is your biggest 'Pet Peeve'?", a: "A", b: "B", c: "C", d: "D",
+          options: ["Tardiness and lack of preparation.", "Repetitive routines.", "Rudeness and lack of empathy.", "Illogical arguments."] },
+        { q: "If you could have one superpower, it would be:", a: "A", b: "B", c: "C", d: "D",
+          options: ["Time Management (pausing time).", "Shapeshifting (experiencing other lives).", "Telepathy (understanding feelings).", "Omniscience (knowing the answers)."] }
+    ];
+
+    let currentQuestion = 0;
+    let scores = { A: 0, B: 0, C: 0, D: 0 };
+
+    function startQuiz() {
+        document.getElementById('start-page').classList.add('hidden');
+        document.getElementById('quiz-page').classList.remove('hidden');
+        showQuestion();
+    }
+
+    function showQuestion() {
+        const qData = questions[currentQuestion];
+        document.getElementById('question-number').innerText = `Question ${currentQuestion + 1} of 20`;
+        document.getElementById('question-text').innerText = qData.q;
+        document.getElementById('progress').style.width = ((currentQuestion / 20) * 100) + "%";
+        
+        const optionsDiv = document.getElementById('options');
+        optionsDiv.innerHTML = '';
+        
+        const labels = ['A', 'B', 'C', 'D'];
+        qData.options.forEach((opt, index) => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.innerText = opt;
+            btn.onclick = () => selectOption(labels[index]);
+            optionsDiv.appendChild(btn);
+        });
+    }
+
+    function selectOption(label) {
+        scores[label]++;
+        currentQuestion++;
+        
+        if (currentQuestion < questions.length) {
+            showQuestion();
+        } else {
+            showResults();
+        }
+    }
+
+    function showResults() {
+        document.getElementById('quiz-page').classList.add('hidden');
+        document.getElementById('result-page').classList.remove('hidden');
+        
+        const winner = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
+        const title = document.getElementById('result-title');
+        const desc = document.getElementById('result-text');
+
+        const profiles = {
+            'A': {
+                name: "The Architect",
+                text: "You thrive on order, reliability, and results. You are high in Conscientiousness and likely the person everyone goes to when they need a plan executed perfectly. Your strength is your discipline."
+            },
+            'B': {
+                name: "The Explorer",
+                text: "You value novelty, creativity, and freedom. You see life as an adventure and aren't afraid of the unknown. Your strength is your adaptability and outside-the-box thinking."
+            },
+            'C': {
+                name: "The Harmonizer",
+                text: "You are the emotional glue of any group. You value connection, kindness, and empathy above all else. Your strength is your ability to build community and make others feel seen."
+            },
+            'D': {
+                name: "The Analyst",
+                text: "You value depth, independence, and objective truth. You prefer to understand the 'why' before the 'how' and enjoy quiet reflection. Your strength is your logical perspective and focus."
+            }
+        };
+
+        title.innerText = profiles[winner].name;
+        desc.innerText = profiles[winner].text;
+    }
+</script>
+
+</body>
+</html>
